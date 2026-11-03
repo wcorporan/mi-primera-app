@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f2">
+  <title>Mi día · Tareas diarias</title>
+  <style>
+:root { color-scheme: light; font-family: "Segoe UI", system-ui, sans-serif; color: #263e35; background: #f6f7f2; font-synthesis: none; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 280px; background: radial-gradient(ellipse at 10% 0%, #e5eee3 0, transparent 50%), radial-gradient(ellipse at 100% 70%, #f2eadc 0, transparent 45%); min-height: 100vh; }
+button, input { font: inherit; -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid #a15b18; outline-offset: 4px; }
+.agenda { width: min(100% - 40px, 760px); margin: 0 auto; padding: 56px 0 30px; }
+.marca { display: inline-flex; align-items: center; gap: 10px; font-size: .8rem; font-weight: 750; letter-spacing: .18em; }
+.marca span { display: grid; place-items: center; background: #2e624d; color: white; width: 30px; height: 30px; border-radius: 10px; font-size: 1.1rem; }
+.fecha { color: #5c6e61; margin: 36px 0 12px; font-size: .9rem; }
+h1 { font-size: clamp(2rem, 5vw, 2.85rem); letter-spacing: -.055em; line-height: 1.12; margin: 0; font-weight: 650; }
+.introduccion { line-height: 1.7; color: #637268; max-width: 530px; margin: 17px 0 30px; }
+.panel { background: #fff; border: 1px solid #e2e7df; border-radius: 24px; padding: 32px; box-shadow: 0 16px 50px #334b3510; }
+.titulo-panel { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.sobretitulo { font-size: .65rem; letter-spacing: .15em; color: #657569; font-weight: 700; margin: 0 0 8px; }
+h2 { font-size: 1.5rem; letter-spacing: -.035em; margin: 0; }
+.indicador { background: #eff4ed; border-radius: 30px; padding: 8px 12px; font-size: .78rem; font-weight: 600; white-space: nowrap; }
+form { margin-top: 30px; }
+label { font-weight: 600; font-size: .9rem; }
+.entrada-grupo { display: flex; gap: 10px; margin-top: 10px; }
+input { min-width: 0; flex: 1; width: 100%; padding: 14px; border: 1px solid #d6dfd6; border-radius: 11px; background: #fcfdfb; color: #263e35; }
+input::placeholder { color: #788279; }
+.boton-agregar { border: 0; border-radius: 11px; padding: 12px 18px; color: white; background: #2e624d; font-size: .88rem; font-weight: 600; }
+.boton-agregar:hover { background: #214c3a; }
+.boton-agregar span { font-size: 1.1rem; }
+.ayuda { font-size: .75rem; color: #68766b; margin: 9px 0 26px; }
+.progreso-cabecera { display: flex; justify-content: space-between; gap: 10px; color: #647367; font-size: .75rem; margin-bottom: 9px; }
+progress { display: block; width: 100%; height: 7px; border: 0; border-radius: 8px; overflow: hidden; background: #edf0e9; accent-color: #57836a; }
+progress::-webkit-progress-bar { background: #edf0e9; border-radius: 8px; }
+progress::-webkit-progress-value { background: #57836a; border-radius: 8px; }
+progress::-moz-progress-bar { background: #57836a; border-radius: 8px; }
+.filtros { display: flex; gap: 5px; margin: 27px 0 18px; border-bottom: 1px solid #edf0e9; padding-bottom: 12px; }
+.filtros button { border: 0; background: transparent; color: #617165; padding: 9px 13px; border-radius: 8px; font-size: .8rem; }
+.filtros button[aria-pressed="true"] { background: #eaf2e9; color: #2e624d; font-weight: 700; }
+.lista { list-style: none; padding: 0; margin: 0; }
+.tarea { display: flex; align-items: center; gap: 13px; padding: 14px 0; border-bottom: 1px solid #edf0e9; }
+.tarea label { flex: 1; display: flex; align-items: center; gap: 13px; min-width: 0; cursor: pointer; line-height: 1.5; font-weight: 400; }
+.tarea input { flex: 0 0 22px; width: 22px; height: 22px; margin: 0; accent-color: #2e624d; cursor: pointer; }
+.tarea .texto { overflow-wrap: anywhere; }
+.tarea.completada .texto { text-decoration: line-through; color: #718075; }
+.eliminar { flex-shrink: 0; display: grid; place-items: center; border: 0; background: transparent; color: #768279; border-radius: 8px; width: 44px; height: 44px; }
+.eliminar:hover { color: #a04034; background: #fcf0ed; }
+.eliminar svg { width: 19px; height: 19px; }
+.vacio { text-align: center; padding: 30px 12px; }
+.icono-vacio { display: grid; place-items: center; margin: auto; width: 56px; height: 56px; border-radius: 18px; background: #f6f2e5; color: #987439; font-size: 2rem; }
+h3 { font-size: 1.05rem; font-weight: 600; margin: 17px 0 8px; }
+.vacio p { color: #69776d; font-size: .85rem; line-height: 1.65; margin: 0; }
+[hidden] { display: none !important; }
+.aviso { color: #7b4c24; font-size: .82rem; line-height: 1.5; }
+.aviso:empty { display: none; }
+.confirmacion { color: #2e624d; font-size: .85rem; line-height: 1.5; }
+.confirmacion:empty { display: none; }
+.version { display: block; margin-top: 5px; }
+footer { text-align: center; color: #69756a; font-size: .73rem; line-height: 1.8; margin-top: 23px; }
+@media (max-width: 540px) {
+  .agenda { width: calc(100% - 28px); padding-top: 28px; }
+  .fecha { margin-top: 28px; }
+  .panel { padding: 22px 18px; border-radius: 18px; }
+  .entrada-grupo { flex-direction: column; }
+  .boton-agregar { min-height: 46px; }
+  .introduccion { font-size: .93rem; }
+  .filtros { gap: 0; }
+  .filtros button { flex: 1; padding-inline: 6px; }
+}
+  </style>
+</head>
+<body>
+  <main class="agenda">
+    <header>
+      <span class="marca"><span aria-hidden="true">✓</span> MI DÍA</span>
+      <p id="fecha" class="fecha"></p>
+      <h1>Un día, un paso a la vez.</h1>
+      <p class="introduccion">Haz espacio para lo que importa. Organiza tus tareas y celebra cada pequeño avance.</p>
+    </header>
+    <section class="panel" aria-label="Mis tareas diarias">
+      <div class="titulo-panel">
+        <div><p class="sobretitulo">TU ESPACIO PERSONAL</p><h2>Mis tareas</h2></div>
+        <span class="indicador" id="resumen">0 pendientes</span>
+      </div>
+      <p id="inicio-aviso" class="aviso" role="alert">La aplicación aún no está lista. Si este aviso no desaparece, abre este archivo directamente en Edge o Chrome y comprueba que JavaScript esté habilitado.</p>
+      <form id="formulario">
+        <label for="nueva-tarea">¿Qué quieres hacer hoy?</label>
+        <div class="entrada-grupo">
+          <input id="nueva-tarea" name="tarea" type="text" disabled maxlength="200" placeholder="Por ejemplo: salir a caminar" autocomplete="off" required aria-describedby="ayuda">
+          <button class="boton-agregar" type="submit" disabled><span aria-hidden="true">＋</span> Agregar tarea</button>
+        </div>
+        <p id="ayuda" class="ayuda">Escribe una tarea y presiona Enter para agregarla.</p>
+        <p id="confirmacion" class="confirmacion" role="status" aria-live="polite" aria-atomic="true"></p>
+      </form>
+      <div class="progreso-cabecera"><span>Tu progreso</span><span id="progreso-texto">0 de 0 completadas</span></div>
+      <progress id="progreso" max="1" value="0" aria-label="Progreso de tareas"></progress>
+      <div class="filtros" role="group" aria-label="Filtrar tareas">
+        <button type="button" data-filtro="todas" aria-pressed="true">Todas</button>
+        <button type="button" data-filtro="pendientes" aria-pressed="false">Pendientes</button>
+        <button type="button" data-filtro="completadas" aria-pressed="false">Completadas</button>
+      </div>
+      <ul id="lista" class="lista" aria-label="Lista de tareas"></ul>
+      <div id="vacio" class="vacio">
+        <span class="icono-vacio" aria-hidden="true">☀</span>
+        <h3 id="vacio-titulo">Tu día empieza aquí</h3>
+        <p id="vacio-texto">Agrega tu primera tarea. Los pequeños pasos también cuentan.</p>
+      </div>
+      <p id="aviso" class="aviso" role="status" aria-live="polite"></p>
+    </section>
+    <footer>Hecho para ir a tu ritmo. · Tus tareas se guardan en este navegador.<span class="version">Versión 1.1 · <span id="estado-inicio">Iniciando…</span></span></footer>
+  </main>
+<script>
+(() => {
+"use strict";
+
+const CLAVE = "mi-dia.tareas.v1";
+const formulario = document.querySelector("#formulario");
+const entrada = document.querySelector("#nueva-tarea");
+const lista = document.querySelector("#lista");
+const aviso = document.querySelector("#aviso");
+const confirmacion = document.querySelector("#confirmacion");
+let filtro = "todas";
+let tareas = [];
+
+document.querySelector("#fecha").textContent = new Intl.DateTimeFormat("es", {
+  weekday: "long", day: "numeric", month: "long", year: "numeric",
+}).format(new Date());
+
+try {
+  const guardadas = JSON.parse(localStorage.getItem(CLAVE) ?? "[]");
+  if (!Array.isArray(guardadas) || !guardadas.every(tarea =>
+    tarea && typeof tarea.id === "string" && typeof tarea.texto === "string" &&
+    tarea.texto.trim().length > 0 && typeof tarea.completada === "boolean"
+  ) || new Set(guardadas.map(tarea => tarea.id)).size !== guardadas.length) {
+    throw new Error("Formato inválido");
+  }
+  tareas = guardadas;
+} catch {
+  aviso.textContent = "No pudimos recuperar tus tareas guardadas. Puedes empezar una lista nueva. Si el navegador bloquea el almacenamiento, mantenlo abierto para conservar los cambios de esta sesión.";
+}
+
+function guardar() {
+  try {
+    localStorage.setItem(CLAVE, JSON.stringify(tareas));
+    aviso.textContent = "";
+  } catch {
+    aviso.textContent = "El navegador no permite guardar tus tareas. Los cambios solo durarán mientras esta página permanezca abierta. Revisa los permisos de almacenamiento de tu navegador.";
+  }
+}
+
+function mostrar() {
+  const completadas = tareas.filter(tarea => tarea.completada).length;
+  const pendientes = tareas.length - completadas;
+  document.querySelector("#resumen").textContent = `${pendientes} ${pendientes === 1 ? "pendiente" : "pendientes"}`;
+  document.querySelector("#progreso-texto").textContent = `${completadas} de ${tareas.length} completadas`;
+  document.querySelector("#progreso").max = tareas.length || 1;
+  document.querySelector("#progreso").value = completadas;
+  const visibles = tareas.filter(tarea => filtro === "todas" || (filtro === "completadas" ? tarea.completada : !tarea.completada));
+  lista.replaceChildren();
+  for (const tarea of visibles) {
+    const elemento = document.createElement("li");
+    elemento.className = `tarea${tarea.completada ? " completada" : ""}`;
+    elemento.dataset.id = tarea.id;
+    const etiqueta = document.createElement("label");
+    const casilla = document.createElement("input");
+    casilla.type = "checkbox";
+    casilla.checked = tarea.completada;
+    const texto = document.createElement("span");
+    texto.className = "texto";
+    texto.textContent = tarea.texto;
+    etiqueta.append(casilla, texto);
+    casilla.addEventListener("change", () => {
+      tarea.completada = casilla.checked;
+      guardar();
+      mostrar();
+      confirmacion.textContent = tarea.completada ? `Tarea completada: ${tarea.texto}` : `Tarea pendiente: ${tarea.texto}`;
+      const nuevaCasilla = [...lista.querySelectorAll("input")].find(input => input.closest("li").dataset.id === tarea.id);
+      (nuevaCasilla ?? document.querySelector(`[data-filtro="${filtro}"]`)).focus();
+    });
+    const eliminar = document.createElement("button");
+    eliminar.type = "button";
+    eliminar.className = "eliminar";
+    eliminar.setAttribute("aria-label", `Eliminar tarea: ${tarea.texto}`);
+    eliminar.title = "Eliminar tarea";
+    eliminar.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 10v7m4-7v7"/></svg>';
+    eliminar.addEventListener("click", () => {
+      const posicion = visibles.indexOf(tarea);
+      tareas = tareas.filter(item => item.id !== tarea.id);
+      guardar();
+      mostrar();
+      confirmacion.textContent = `Tarea eliminada: ${tarea.texto}`;
+      const botones = lista.querySelectorAll(".eliminar");
+      (botones[Math.min(posicion, botones.length - 1)] ?? entrada).focus();
+    });
+    elemento.append(etiqueta, eliminar);
+    lista.append(elemento);
+  }
+  document.querySelector("#vacio").hidden = visibles.length > 0;
+  const sinTareas = tareas.length === 0;
+  document.querySelector("#vacio-titulo").textContent = sinTareas ? "Tu día empieza aquí" : filtro === "pendientes" ? "¡Todo al día!" : "Cada paso cuenta";
+  document.querySelector("#vacio-texto").textContent = sinTareas ? "Agrega tu primera tarea. Los pequeños pasos también cuentan." : filtro === "pendientes" ? "No tienes tareas pendientes. Disfruta de tu avance." : "Aún no tienes tareas completadas. ¡Tú puedes!";
+}
+
+entrada.addEventListener("input", () => entrada.setCustomValidity(""));
+entrada.addEventListener("invalid", () => {
+  if (entrada.validity.valueMissing) entrada.setCustomValidity("Escribe una tarea antes de agregarla.");
+});
+formulario.addEventListener("submit", evento => {
+  evento.preventDefault();
+  const texto = entrada.value.trim();
+  if (!texto) {
+    entrada.setCustomValidity("Escribe una tarea antes de agregarla.");
+    entrada.reportValidity();
+    return;
+  }
+  const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  tareas.push({ id, texto, completada: false });
+  filtro = "todas";
+  actualizarFiltros();
+  guardar();
+  mostrar();
+  confirmacion.textContent = `Tarea agregada: ${texto}`;
+  formulario.reset();
+  entrada.focus();
+});
+
+function actualizarFiltros() {
+  document.querySelectorAll("[data-filtro]").forEach(boton => {
+    boton.setAttribute("aria-pressed", String(boton.dataset.filtro === filtro));
+  });
+}
+document.querySelectorAll("[data-filtro]").forEach(boton => {
+  boton.addEventListener("click", () => {
+    filtro = boton.dataset.filtro;
+    actualizarFiltros();
+    mostrar();
+  });
+});
+
+mostrar();
+
+// El documento ya existe: el código se ejecuta al final de la página.
+entrada.disabled = false;
+document.querySelector(".boton-agregar").disabled = false;
+document.querySelector("#inicio-aviso").hidden = true;
+document.querySelector("#estado-inicio").textContent = "Lista para usar";
+
+})();
+</script>
+</body>
+</html>

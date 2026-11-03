@@ -1,5 +1,7 @@
 # Mi día · Tareas diarias
 
+Guía para estudiar el proceso completo: [descargar el PDF paso a paso](docs/Guia-Mi-Dia-paso-a-paso.pdf). También está disponible su [versión en texto](docs/guia-mi-dia.md).
+
 Aplicación en español para agregar, completar, volver a marcar como pendiente y eliminar tareas. Incluye filtros y una barra de progreso. Se adapta a computadoras y celulares.
 
 Está hecha con HTML, CSS y JavaScript: no necesitas instalar paquetes ni crear una cuenta. Funciona sin Internet.
